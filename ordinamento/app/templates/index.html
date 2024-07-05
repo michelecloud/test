@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordina Nomi</title>
+</head>
+<body>
+    <h2>Inserisci e Ordina Nomi</h2>
+    <form action="/aggiungi_nome" method="post">
+        <label for="inputNome">Inserisci Nome:</label>
+        <input type="text" id="inputNome" name="nome">
+        <button type="submit">Aggiungi Nome</button>
+    </form>
+    <form action="/ordina_nomi" method="post">
+        <button type="submit">Ordina</button>
+    </form>
+    <form action="/reset" method="post">
+        <button type="submit">Reset</button>
+    </form>
+    <hr>
+    <h3>Nomi nell'Ordine di Inserimento:</h3>
+    <ul>
+        {% for nome in nomi %}
+            <li>{{ nome }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Nomi in Ordine Alfabetico:</h3>
+    <ul>
+        {% for nome in nomi_ordinati %}
+            <li>{{ nome }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
