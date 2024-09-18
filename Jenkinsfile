@@ -26,9 +26,9 @@ pipeline {
                         docker images -f "dangling=true" -q | ForEach-Object { docker rmi -f $_ }
 
                         # Se esiste già l'immagine, la rimuoviamo
-                        $imageExists = docker images -q "$imageName:$imageTag"
+                        $imageExists = docker images -q "$($imageName):$($imageTag)"
                         if ($imageExists) {
-                            docker rmi -f "$imageName:$imageTag"
+                            docker rmi -f "$($imageName):$($imageTag)"
                         }
                         
                         # Costruisci la nuova immagine Docker e associala al nome e tag specificati
