@@ -1,12 +1,14 @@
 FROM python:3.12
 
-WORKDIR /app
+WORKDIR /
 
-COPY requirements.txt .
-COPY app/app.py ./app.py
-COPY app/templates ./templates
+COPY requirements.txt
 
 RUN pip install -r requirements.txt
+
+COPY app.py
+
+COPY templates
 
 EXPOSE 5001
 
