@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'ordinamento'
-        DOCKER_IMAGE_TAG = 'latest'
+        DOCKER_IMAGE_NAME = 'ordinamento1'
+        DOCKER_IMAGE_TAG = 'latest' // Puoi usare un tag dinamico se preferisci
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/michelecloud/test.git', branch: 'master'
+                git url: 'https://github.com/michelecloud/test.git', branch: 'main'
             }
         }
 
@@ -18,7 +18,9 @@ pipeline {
                 script {
                     powershell '''
                         # Costruisci l'immagine Docker
-                        docker build -t $env.DOCKER_IMAGE_NAME:$env.DOCKER_IMAGE_TAG .
+                        $imageName = "$env:DOCKER_IMAGE_NAME"
+                        $imageTag = "$env:DOCKER_IMAGE_TAG"
+                        docker build -t "$imageName:$imageTag" .
                     '''
                 }
             }
@@ -29,7 +31,9 @@ pipeline {
                 script {
                     powershell '''
                         # Esegui un container per testare l'immagine
-                        docker run --rm $env.DOCKER_IMAGE_NAME:$env.DOCKER_IMAGE_TAG
+                        $imageName = "$env:DOCKER_IMAGE_NAME"
+                        $imageTag = "$env:DOCKER_IMAGE_TAG"
+                        docker run --rm "$imageName:$imageTag"
                     '''
                 }
             }
@@ -39,9 +43,11 @@ pipeline {
     post {
         always {
             script {
-                // Pulizia delle immagini Docker locali
                 powershell '''
-                    docker rmi $env.DOCKER_IMAGE_NAME:$env.DOCKER_IMAGE_TAG
+                    # Pulizia delle immagini Docker locali
+                    $imageName = "$env:DOCKER_IMAGE_NAME"
+                    $imageTag = "$env:DOCKER_IMAGE_TAG"
+                    docker rmi "$imageName:$imageTag"
                 '''
             }
         }
