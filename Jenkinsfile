@@ -29,7 +29,7 @@ pipeline {
                         }
                         
                         # Costruisci la nuova immagine Docker e associala al nome e tag specificati
-                        docker build -t "$imageName:$imageTag" .
+                        docker build -t "$($imageName):$($imageTag)" .
                     '''
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
                         }
                         
                         # Esegui il nuovo container, mappando la porta 5002
-                        docker run -d --name "$containerName" -p 5002:5002 "$imageName:$imageTag"
+                        docker run -d --name "$containerName" -p 5002:5002 "$($imageName):$($imageTag)"
                     '''
                 }
             }
@@ -68,7 +68,7 @@ pipeline {
                     $imageTag = "${env:DOCKER_IMAGE_TAG}"
                     
                     # Pulizia (disabilitata se vuoi mantenere l'immagine per il futuro uso)
-                    # docker rmi -f "$imageName:$imageTag"
+                    # docker rmi -f "$($imageName):$($imageTag)"
                 '''
             }
         }
