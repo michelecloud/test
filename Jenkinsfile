@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'ordinamento1'
-        DOCKER_IMAGE_TAG = 'latest' // Puoi usare un tag dinamico se preferisci
+        DOCKER_IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -17,10 +17,12 @@ pipeline {
             steps {
                 script {
                     powershell '''
+                        # Definisci le variabili
+                        $imageName = "${env:DOCKER_IMAGE_NAME}"
+                        $imageTag = "${env:DOCKER_IMAGE_TAG}"
+                        
                         # Costruisci l'immagine Docker
-                        $imageName = "$env:DOCKER_IMAGE_NAME"
-                        $imageTag = "$env:DOCKER_IMAGE_TAG"
-                        docker build -t "$imageName:$imageTag" .
+                        docker build -t "${imageName}:${imageTag}" .
                     '''
                 }
             }
@@ -31,9 +33,10 @@ pipeline {
                 script {
                     powershell '''
                         # Esegui un container per testare l'immagine
-                        $imageName = "$env:DOCKER_IMAGE_NAME"
-                        $imageTag = "$env:DOCKER_IMAGE_TAG"
-                        docker run --rm "$imageName:$imageTag"
+                        $imageName = "${env:DOCKER_IMAGE_NAME}"
+                        $imageTag = "${env:DOCKER_IMAGE_TAG}"
+                        
+                        docker run --rm "${imageName}:${imageTag}"
                     '''
                 }
             }
@@ -45,13 +48,12 @@ pipeline {
             script {
                 powershell '''
                     # Pulizia delle immagini Docker locali
-                    $imageName = "$env:DOCKER_IMAGE_NAME"
-                    $imageTag = "$env:DOCKER_IMAGE_TAG"
-                    docker rmi "$imageName:$imageTag"
+                    $imageName = "${env:DOCKER_IMAGE_NAME}"
+                    $imageTag = "${env:DOCKER_IMAGE_TAG}"
+                    
+                    docker rmi "${imageName}:${imageTag}"
                 '''
             }
         }
     }
 }
-
-
