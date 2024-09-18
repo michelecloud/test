@@ -28,8 +28,8 @@ pipeline {
                             docker rmi -f "${imageName}:${imageTag}"
                         }
                         
-                        # Costruisci la nuova immagine Docker
-                        docker build -t "${imageName}:${imageTag}" .
+                        # Costruisci la nuova immagine Docker e associala al nome e tag specificati
+                        docker build -t "$imageName:$imageTag" .
                     '''
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
                         }
                         
                         # Esegui il nuovo container, mappando la porta 5002
-                        docker run -d --name "$containerName" -p 5002:5002 "${imageName}:${imageTag}"
+                        docker run -d --name "$containerName" -p 5002:5002 "$imageName:$imageTag"
                     '''
                 }
             }
@@ -63,11 +63,12 @@ pipeline {
         always {
             script {
                 powershell '''
-                    # Pulizia delle immagini Docker locali
+                    # Pulizia delle immagini Docker locali (opzionale)
                     $imageName = "${env:DOCKER_IMAGE_NAME}"
                     $imageTag = "${env:DOCKER_IMAGE_TAG}"
                     
-                    docker rmi -f "${imageName}:${imageTag}"
+                    # Pulizia (disabilitata se vuoi mantenere l'immagine per il futuro uso)
+                    # docker rmi -f "$imageName:$imageTag"
                 '''
             }
         }
