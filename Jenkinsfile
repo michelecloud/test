@@ -36,7 +36,8 @@ pipeline {
                         $imageName = "${env:DOCKER_IMAGE_NAME}"
                         $imageTag = "${env:DOCKER_IMAGE_TAG}"
                         
-                        docker run --rm "${imageName}:${imageTag}"
+                        # Mappa la porta 5001 del container sulla porta 5001 dell'host
+                        docker run -d -p 5001:5001 "${imageName}:${imageTag}"
                     '''
                 }
             }
