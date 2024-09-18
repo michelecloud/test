@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'ordinamento1'
+        DOCKER_IMAGE_NAME = 'ordinamento'
         DOCKER_IMAGE_TAG = 'latest'
         DOCKER_CONTAINER_NAME = 'appord'
     }
@@ -25,9 +25,9 @@ pipeline {
                         # Rimuovi eventuali immagini non taggate <none>
                         docker images -f "dangling=true" -q | ForEach-Object { docker rmi -f $_ }
 
-                        # Se esiste già l'immagine, la rimuoviamo
-                        $imageExists = docker images -q "$($imageName):$($imageTag)"
-                        if ($imageExists) {
+                        # Verifica se esiste già un'immagine con lo stesso nome e tag, la rimuoviamo se esiste
+                        $existingImageId = docker images -q "$($imageName):$($imageTag)"
+                        if ($existingImageId) {
                             docker rmi -f "$($imageName):$($imageTag)"
                         }
                         
@@ -66,12 +66,8 @@ pipeline {
         always {
             script {
                 powershell '''
-                    # Pulizia delle immagini Docker locali (opzionale)
-                    $imageName = "${env:DOCKER_IMAGE_NAME}"
-                    $imageTag = "${env:DOCKER_IMAGE_TAG}"
-                    
-                    # Pulizia (disabilitata se vuoi mantenere l'immagine per il futuro uso)
-                    # docker rmi -f "$($imageName):$($imageTag)"
+                    # Pulizia delle immagini Docker locali non utilizzate
+                    docker system prune -f
                 '''
             }
         }
